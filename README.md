@@ -6,7 +6,8 @@ A code review AI bot that suggests improvements in the provided code.
 
 - Clone the repository
 - Create `.venv` if possible
-- Install required dependencies `pip install -r requirements.txt` 
+- Install required dependencies `pip install -r requirements.txt`
+- From CLI: `export OPENAI_API_KEY=sk-xxxx`
 - From CLI: `streamlit run main.py`
 
 # Results:
