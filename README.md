@@ -24,4 +24,4 @@ A code review AI bot that suggests improvements in the provided code.
 # Next:
 
 - Code for: [GitHub Actions](https://github.com/sachs7/reviewit-ai-git-actions)
-  - Note: This is work-in-progress as the code isn't fully functional when run as GitHub actions, but the function by itself is working as expected (see readme for example)
+  - Note: The code is working as expected, the issue is to post the comment. It will be resolved soon. Check the [sample PR result](https://github.com/sachs7/reviewit-ai-git-actions/pull/20/checks#step:5:22)
