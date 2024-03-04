@@ -23,4 +23,5 @@ A code review AI bot that suggests improvements in the provided code.
 
 # Next:
 
-- Create a GitHub action to review incoming PRs
+- Code for: [GitHub Actions](https://github.com/sachs7/reviewit-ai-git-actions)
+  - Note: This is work-in-progress as the code isn't fully functional when run as GitHub actions, but the function by itself is working as expected (see readme for example)
