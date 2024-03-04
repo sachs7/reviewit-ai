@@ -24,4 +24,9 @@ A code review AI bot that suggests improvements in the provided code.
 # Next:
 
 - Code for: [GitHub Actions](https://github.com/sachs7/reviewit-ai-git-actions)
-  - Note: The code is working as expected, the issue is to post the comment. It will be resolved soon. Check the [sample PR result](https://github.com/sachs7/reviewit-ai-git-actions/pull/20/checks#step:5:22)
+
+- Code that can be improved (bad-code):
+  Comment from ReviewIt-AI: [bad-code](https://github.com/sachs7/reviewit-ai-git-actions/pull/31#issuecomment-1977448710)
+
+- Better code:
+  Comment from ReviewIt-AI: [better-code](https://github.com/sachs7/reviewit-ai-git-actions/pull/32#issuecomment-1977451877)
