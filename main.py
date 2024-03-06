@@ -1,5 +1,8 @@
 import streamlit as st
+
 from langchain_openai import ChatOpenAI
+from langchain_anthropic import ChatAnthropic
+
 from langchain.prompts.chat import (
     HumanMessagePromptTemplate,
     ChatPromptTemplate,
@@ -11,8 +14,25 @@ from system_message import system_template
 # Initialize chat history from session state (if available)
 chat_history = st.session_state.get("chat_history", [])
 
-# Create the LLM and prompt templates
-llm = ChatOpenAI(temperature=0, model_name="gpt-4-1106-preview")
+
+# Create a dropdown for LLM provider selection
+selected_provider = st.selectbox(
+    "Select LLM Provider:",
+    ("OpenAI", "Anthropic"),
+    index=0,  # Set default as OpenAI
+)
+
+# Create the LLM based on the selected provider
+if selected_provider == "OpenAI":
+    llm = ChatOpenAI(temperature=0, model_name="gpt-4-1106-preview")
+elif selected_provider == "Anthropic":
+    llm = ChatAnthropic(temperature=0, model_name="claude-3-opus-20240229")
+else:
+    raise ValueError(f"Invalid provider: {selected_provider}")
+
+# Initialize chat history from session state (if available)
+chat_history = st.session_state.get("chat_history", [])
+
 
 user_template = HumanMessagePromptTemplate.from_template("{user_prompt}")
 template = ChatPromptTemplate.from_messages([system_template, user_template])
@@ -27,11 +47,12 @@ def get_code_review(user_prompt):
 
 
 # Define the Streamlit app and set full-width layout
-st.set_page_config(layout="wide")
+# st.set_page_config(layout="wide")
 st.title("ReviewIt AI")
 
 # Create two containers with spacing
 col1, col2 = st.columns([5, 2])  # Adjust column widths as needed
+
 
 with col1:
     # Prompt and response section
@@ -42,7 +63,6 @@ with col1:
             review = get_code_review(user_code)
             chat_history.append({"user_prompt": user_code, "review": review})
             st.session_state.chat_history = chat_history
-
         st.write("Review:", review)
 
 with col2:
