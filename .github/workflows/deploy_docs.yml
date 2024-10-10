@@ -1,57 +1,31 @@
-name: Generate and Deploy Docs
+name: Generate and Deploy Documentation
 
 on:
   push:
     branches:
-      - main  # Trigger on merges to the main branch
+      - main
 
 jobs:
   build:
     runs-on: ubuntu-latest
-
     steps:
-      # Step 1: Check out the latest code
-      - name: Checkout repository
-        uses: actions/checkout@v3
-
-      # Step 2: Set up Python environment
+      - uses: actions/checkout@v2
       - name: Set up Python
-        uses: actions/setup-python@v4
+        uses: actions/setup-python@v2
         with:
-          python-version: '3.x'  # Specify your required Python version
-
-      # Step 3: Install pdoc (for generating documentation)
+          python-version: 3.12
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
           pip install pdoc3
           pip install -r requirements.txt
 
-      # Step 4: Generate HTML documentation using pdoc
-      - name: Generate Documentation
+      - name: Generate documentation
         run: |
-          pdoc --html --output-dir docs .
-
-      # Step 5: Deploy generated docs to GitHub Pages (gh-pages branch)
-      - name: Deploy to GitHub Pages
-        run: |
-          # Configure git user details
-          git config user.name "${{ github.actor }}"
-          git config user.email "${{ github.actor }}@users.noreply.github.com"
-
-          # Remove the docs/ directory from history to prevent duplication
-          rm -rf .git
-
-          # Initialize a new git repo for the gh-pages branch
-          git init
-          git checkout -b gh-pages
-
-          # Copy generated documentation from docs/ folder
-          cp -r docs/* .
-
-          # Add all files and commit
-          git add .
-          git commit -m "Deploy updated documentation"
-
-          # Force push to gh-pages branch
-          git push --force "https://${{ github.actor }}:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git" gh-pages
+          cd docs
+          pdoc --html --output-dir . reviewit-ai
+      - name: Deploy documentation to GitHub Pages
+        uses: JamesIves/github-pages-deploy-action@4.1.4
+        with:
+          branch: gh-pages # The branch the action should deploy to.
+          folder: docs # The folder the action should deploy.
