@@ -1,17 +1,16 @@
 name: Generate and Deploy Docs
 
-# Trigger the workflow on push events to the main branch
 on:
   push:
     branches:
-      - main  # Trigger when changes are merged into the main branch
+      - main  # Trigger on merges to the main branch
 
 jobs:
   build:
     runs-on: ubuntu-latest
 
     steps:
-      # Step 1: Check out the code
+      # Step 1: Check out the latest code
       - name: Checkout repository
         uses: actions/checkout@v3
 
@@ -19,35 +18,40 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v4
         with:
-          python-version: '3.12'  # Specify your Python version
+          python-version: '3.x'  # Specify your required Python version
 
-      # Step 3: Install dependencies (pdoc)
+      # Step 3: Install pdoc (for generating documentation)
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
           pip install pdoc3
           pip install -r requirements.txt
 
-      # Step 4: Generate documentation using pdoc
+      # Step 4: Generate HTML documentation using pdoc
       - name: Generate Documentation
         run: |
-          pdoc3 --html --output-dir docs .
+          pdoc --html --output-dir docs .
 
-      # Step 5: Deploy to GitHub Pages (gh-pages branch)
+      # Step 5: Deploy generated docs to GitHub Pages (gh-pages branch)
       - name: Deploy to GitHub Pages
         run: |
-          # Configure Git
+          # Configure git user details
           git config user.name "${{ github.actor }}"
           git config user.email "${{ github.actor }}@users.noreply.github.com"
 
-          # Create a new Git repo inside the docs/ folder
-          cd docs
+          # Remove the docs/ directory from history to prevent duplication
+          rm -rf .git
+
+          # Initialize a new git repo for the gh-pages branch
           git init
           git checkout -b gh-pages
 
-          # Add the generated documentation to the repository
-          git add .
-          git commit -m "Update documentation after merge to main"
+          # Copy generated documentation from docs/ folder
+          cp -r docs/* .
 
-          # Force-push to the gh-pages branch
-          git push --force "https://${{ github.actor }}:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git" gh-pages:gh-pages
+          # Add all files and commit
+          git add .
+          git commit -m "Deploy updated documentation"
+
+          # Force push to gh-pages branch
+          git push --force "https://${{ github.actor }}:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git" gh-pages
